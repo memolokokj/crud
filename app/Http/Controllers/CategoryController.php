@@ -26,7 +26,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -37,7 +37,10 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if($category = Category::create($request->all())){
+            return redirect()->back();
+        }
+        return redirect()->back();
     }
 
     /**
@@ -89,6 +92,20 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+         $category = Category::find($request['id']);
+
+         if($category)
+         {
+            if($category->delete()){
+                return response()->json([
+                    "messege"=>"regstrp eñe,omasldasdsad",
+                    "code"=>"200",
+                ]);
+            }
+         }
+         return response()->json([
+                    "messege"=>"bad",
+                    "code"=>"400",
+                ]);
     }
 }

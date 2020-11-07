@@ -3,6 +3,9 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Categories') }} 
         </h2>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#addCategory">
+        	Add category
+        </button>
     </x-slot>
 
     <div class="py-12">
@@ -40,7 +43,10 @@
 						    </button>
 						    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
 						      <a onclick="edit({{ $category->id }},'{{ $category->name }}','{{ $category->description }}')" data-toggle="modal" data-target="#editCategory" class="dropdown-item" href="#">
-						      	Editar
+						      	Edit
+						      </a>
+						      <a onclick="remove({{ $category->id }})" class="dropdown-item" href="#">
+						      	Delete
 						      </a>
 						      {{-- <a class="dropdown-item" href="#">Dropdown link</a> --}}
 						    </div>
@@ -56,6 +62,60 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="addCategory" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+
+	      <form method="post" action="{{ url('categories') }}" >
+	      	@csrf
+
+	      	<div class="modal-body">
+		        
+	      		<div class="form-group">
+				    <label for="exampleInputEmail1">
+				    	Name
+				    </label>
+				    <div class="input-group mb-3">
+					  <div class="input-group-prepend">
+					    <span class="input-group-text" id="basic-addon1">@</span>
+					  </div>
+					  <input type="text" class="form-control" placeholder="Category example" aria-label="Category example" aria-describedby="basic-addon1" id="name" name="name" required="">
+					</div>
+				 </div>
+
+				 <div class="form-group">
+				    <label for="exampleInputEmail1">
+				    	Description
+				    </label>
+				    <div class="input-group mb-3">
+					  <div class="input-group-prepend">
+					    <span class="input-group-text" id="basic-addon1">@</span>
+					  </div>
+					  <textarea class="form-control" rows="5" placeholder="description of de category" name="description" id="description"></textarea>
+					</div>
+				 </div>
+
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+		        	Cancel
+		        </button>
+		        <button type="submit" class="btn btn-primary">
+		        	Add data
+		        </button>
+		      </div>
+	      </form>
+
+	    </div>
+	  </div>
+	</div> 
 
     <div class="modal fade" id="editCategory" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 	  <div class="modal-dialog">
@@ -115,13 +175,42 @@
 	</div> 
 
 	<x-slot name="scripts">
-     <script type="text/javascript">
-     	
-     	function edit(id,name,description){
-     		$("#name").val(name)
-			$("#description").val(description)
-			$("#id").val(id)
-     	}
-     </script>
+		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	    <script type="text/javascript">
+	     	
+	     	function edit(id,name,description){
+	     		$("#name").val(name)
+				$("#description").val(description)
+				$("#id").val(id)
+	     	}
+
+	     	function remove(id){
+	     		swal({
+				  title: "Are you sure?",
+				  text: "Once deleted, you will not be able to recover this imaginary file!",
+				  icon: "warning",
+				  buttons: true,
+				  dangerMode: true,
+				})
+				.then((willDelete) => {
+				  if (willDelete) {
+				    axios({
+				    	method: "delete",
+				    	url: "{{url("categories")}}",
+				    	data:{
+				    		id: id,
+				    		_token: "{{csrf_token()}"
+				    	},
+				    }).then(function(response){
+				    	console.log(response.data)
+				    })
+				  } else {
+				    swal("Your imaginary file is safe!");
+				  }
+				});
+				console.log(id);
+	     	}
+	    </script>
     </x-slot>
 </x-app-layout>
