@@ -26,7 +26,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        
+        //
     }
 
     /**
@@ -37,7 +37,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        if($category = Category::create($request->all())){
+        if ($category = Category::create($request->all())) {
             return redirect()->back();
         }
         return redirect()->back();
@@ -90,22 +90,21 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(Request $request)
     {
-         $category = Category::find($request['id']);
+        $category = Category::find($request['id']);
 
-         if($category)
-         {
-            if($category->delete()){
-                return response()->json([
-                    "messege"=>"regstrp eñe,omasldasdsad",
-                    "code"=>"200",
+        if ($category) {
+           if ($category->delete()) {
+               return response()->json([
+                    'message' => 'Registro eliminado correctamente',
+                    'code' => '200',
                 ]);
-            }
-         }
-         return response()->json([
-                    "messege"=>"bad",
-                    "code"=>"400",
-                ]);
+           }
+        }
+        return response()->json([
+            'message' => 'No se pudo eliminar el registro',
+            'code' => '400',
+        ]);
     }
 }
