@@ -28,7 +28,8 @@ Route::middleware(['auth'])->group(function(){
 
 
 	Route::get('/movies','App\Http\Controllers\MovieController@index')->name('movies');
-
+	Route::post('/movies','App\Http\Controllers\MovieController@store');
+	
 	Route::get('/categories','App\Http\Controllers\CategoryController@index');
 	Route::put('/categories','App\Http\Controllers\CategoryController@update');
 	Route::post('/categories','App\Http\Controllers\CategoryController@store');
